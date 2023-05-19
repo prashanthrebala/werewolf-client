@@ -6,6 +6,7 @@ export const Layout = () => {
 
 	return (
 		<Grid
+			container
 			className="min-h-screen w-screen bg-slate-950 flex justify-center items-center"
 			p={4}
 			direction={"column"}
