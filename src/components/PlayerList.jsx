@@ -1,17 +1,17 @@
 import React from "react";
 import { Box, Button, Grid, Typography, Paper } from "@mui/material";
+import { useSocket } from "../contexts/SocketProvider";
 
-export const PlayerList = ({ socket }) => {
+export const PlayerList = () => {
 	const [players, setPlayers] = React.useState([]);
+	const socket = useSocket();
 
 	React.useEffect(() => {
-		socket.on("player-list-update", (playerList) => {
-			console.log(playerList);
-			const pl = [];
-			Object.keys(playerList).forEach((item) => pl.push(playerList[item].name));
-			console.log(pl);
-			setPlayers(pl);
+		if (socket == null) return;
+		socket.on("playerUpdate", (playerList) => {
+			setPlayers(playerList);
 		});
+		console.log("socketUpdated", socket);
 	}, [socket]);
 
 	return (
@@ -21,6 +21,10 @@ export const PlayerList = ({ socket }) => {
 			p={4}
 			direction={"column"}
 		>
+			<Typography variant="h3" className="text-white">
+				{players.length}
+			</Typography>
+			<Button onClick={() => alert(socket.id)}>Start Game</Button>
 			{players.map((item, idx) => {
 				return (
 					<div
@@ -32,11 +36,11 @@ export const PlayerList = ({ socket }) => {
 						key={idx}
 					>
 						<Grid container justifyContent={"flex-end"}>
-							<Grid item xs={8} className="overflow-hidden">
+							<Grid item xs={8} className="overflow-hidden text-center">
 								{item.playerName}
 							</Grid>
 							<Grid item xs={2}>
-								{idx}
+								{/* {idx} */}
 							</Grid>
 						</Grid>
 					</div>

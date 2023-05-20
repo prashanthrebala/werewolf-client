@@ -1,14 +1,20 @@
-import { Layout } from "./Layout";
+import { SocketProvider } from "../contexts/SocketProvider";
+// import { useSessionStorage } from "../hooks/useSessionStorage";
+// import { useLocalStorage } from "../hooks/useLocalStorage";
+// import { Layout } from "./Layout";
 import { Login } from "./Login";
 import { PlayerList } from "./PlayerList";
-import React from "react";
+import React, { useState } from "react";
 
 function App() {
-	const [connection, setConnection] = React.useState(null);
-	return connection == null ? (
-		<Login setConnection={setConnection} />
+	const [id, setId] = useState("hi");
+	const [roomCode, setRoomCode] = useState(null);
+	return roomCode ? (
+		<SocketProvider id={id} roomCode={roomCode}>
+			<PlayerList />
+		</SocketProvider>
 	) : (
-		<PlayerList socket={connection} />
+		<Login setId={setId} setRoomCode={setRoomCode} />
 	);
 }
 
