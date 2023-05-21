@@ -10,8 +10,9 @@ import {
 } from "@mui/material";
 import { io } from "socket.io-client";
 import SendIcon from "@mui/icons-material/Send";
+import { v4 as uuid } from "uuid";
 
-export const Login = ({ setId, setRoomCode }) => {
+export const Login = ({ setId, setPlayerName, setRoomCode }) => {
 	const roomCodeRef = React.useRef();
 	const nameRef = React.useRef();
 
@@ -21,8 +22,9 @@ export const Login = ({ setId, setRoomCode }) => {
 		fetch(`http://192.168.1.129:5000/createroom`)
 			.then((response) => response.json())
 			.then((data) => {
-				setId(nameRef.current.value);
+				setPlayerName(nameRef.current.value);
 				setRoomCode(data.roomCode);
+				setId(uuid());
 			})
 			.catch((error) => {
 				console.error("Error:", error);
@@ -36,8 +38,9 @@ export const Login = ({ setId, setRoomCode }) => {
 			.then((response) => response.json())
 			.then((data) => {
 				if (data.exists) {
-					setId(nameRef.current.value);
+					setPlayerName(nameRef.current.value);
 					setRoomCode(roomCode);
+					setId(uuid());
 					console.log("Room exists");
 				} else {
 					alert("Room doesn't exist");
