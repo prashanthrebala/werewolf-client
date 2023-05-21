@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Grid, Typography } from "@mui/material";
 import { useSocket } from "../contexts/SocketProvider";
 
-export const GameLobby = ({ roomCode }) => {
+export const GameLobby = ({ roomCode, setIsGameRunning }) => {
 	const [roomInfo, setRoomInfo] = React.useState({ playerList: [] });
 	const { socket } = useSocket();
 	console.log("ROOMDATA", roomInfo);
@@ -12,8 +12,11 @@ export const GameLobby = ({ roomCode }) => {
 		socket.on("playerUpdate", (roomData) => {
 			setRoomInfo(roomData);
 		});
+		socket.on("gameStarted", () => {
+			setIsGameRunning(true);
+		});
 		console.log("socketUpdated", socket);
-	}, [socket]);
+	}, [socket, setIsGameRunning]);
 
 	return (
 		<Grid
@@ -49,7 +52,15 @@ export const GameLobby = ({ roomCode }) => {
 					</div>
 				);
 			})}
-			<Button onClick={() => alert(socket.id)}>Start Game</Button>
+			<Button
+				onClick={() => {
+					// alert(socket.id);
+					// setIsGameRunning(true);
+					socket.emit("startGame");
+				}}
+			>
+				Start Game
+			</Button>
 		</Grid>
 	);
 };
