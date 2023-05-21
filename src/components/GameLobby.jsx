@@ -1,10 +1,11 @@
 import React from "react";
-import { Box, Button, Grid, Typography, Paper } from "@mui/material";
+import { Button, Grid, Typography } from "@mui/material";
 import { useSocket } from "../contexts/SocketProvider";
 
-export const PlayerList = () => {
-	const [roomInfo, setRoomInfo] = React.useState({});
-	const { socket, roomCode } = useSocket();
+export const GameLobby = ({ roomCode }) => {
+	const [roomInfo, setRoomInfo] = React.useState({ playerList: [] });
+	const { socket } = useSocket();
+	console.log("ROOMDATA", roomInfo);
 
 	React.useEffect(() => {
 		if (socket == null) return;
@@ -25,10 +26,9 @@ export const PlayerList = () => {
 				{roomCode}
 			</Typography>
 			<Typography variant="body1" className="text-white">
-				{`Player Count: ${Object.keys(roomInfo).length}`}
+				{`Player Count: ${Object.keys(roomInfo["playerList"]).length}`}
 			</Typography>
-			{Object.keys(roomInfo).map((playerId, idx) => {
-				console.log(roomInfo[playerId]);
+			{Object.keys(roomInfo["playerList"]).map((playerInfo, idx) => {
 				return (
 					<div
 						className={`h-10 w-full m-2 \
@@ -40,7 +40,7 @@ export const PlayerList = () => {
 					>
 						<Grid container justifyContent={"flex-end"}>
 							<Grid item xs={8} className="overflow-hidden text-center">
-								{roomInfo[playerId].playerName}
+								{playerInfo.slice(0, 8)}
 							</Grid>
 							<Grid item xs={2}>
 								{/* {idx} */}

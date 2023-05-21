@@ -11,21 +11,15 @@ export function SocketProvider({ id, playerName, roomCode, children }) {
 	const [socket, setSocket] = useState();
 
 	useEffect(() => {
-		const connection = io("http://192.168.1.129:5000");
-		connection.on("connect", () => {
-			connection.emit("join-room", {
-				playerId: id,
-				playerName: playerName,
-				roomCode: roomCode.toUpperCase(),
-			});
-			console.log("joining room", roomCode);
+		const connection = io("http://192.168.1.129:5000", {
+			query: { id, playerName, roomCode: roomCode.toUpperCase() },
 		});
 		setSocket(connection);
 		return () => connection.close();
 	}, [id, playerName, roomCode]);
 
 	return (
-		<SocketContext.Provider value={{ socket, playerName, roomCode }}>
+		<SocketContext.Provider value={{ socket }}>
 			{children}
 		</SocketContext.Provider>
 	);

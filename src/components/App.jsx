@@ -1,14 +1,16 @@
 import { SocketProvider } from "../contexts/SocketProvider";
-import useLocalStorage from "../hooks/useLocalStorage";
-// import { useSessionStorage } from "../hooks/useSessionStorage";
-// import { useLocalStorage } from "../hooks/useLocalStorage";
-// import { Layout } from "./Layout";
 import { Login } from "./Login";
-import { PlayerList } from "./PlayerList";
+import { GameLobby } from "./GameLobby";
 import React, { useState, useEffect } from "react";
+import { v4 as uuid } from "uuid";
 
 function App() {
-	const [id, setId] = useLocalStorage("client-id");
+	const prefixedKey = "werewolf-client-key";
+	let id = localStorage.getItem(prefixedKey);
+	if (id == null) {
+		localStorage.setItem(prefixedKey, uuid());
+	}
+
 	const [playerName, setPlayerName] = useState();
 	const [roomCode, setRoomCode] = useState(null);
 
@@ -16,27 +18,19 @@ function App() {
 		fetch(`http://192.168.1.129:5000/whereami?id=${id}`)
 			.then((response) => response.json())
 			.then((data) => {
-				setRoomCode(data.roomCode);
+				setRoomCode(data?.roomCode);
 			})
 			.catch((error) => {
 				console.error("Error:", error);
 			});
-	}, []);
-
-	// useEffect(() => {
-	// 	console.log("ADSADKLJASKLD", roomCode);
-	// });
+	}, [id]);
 
 	return roomCode ? (
 		<SocketProvider id={id} playerName={playerName} roomCode={roomCode}>
-			<PlayerList />
+			<GameLobby roomCode={roomCode} />
 		</SocketProvider>
 	) : (
-		<Login
-			setId={setId}
-			setPlayerName={setPlayerName}
-			setRoomCode={setRoomCode}
-		/>
+		<Login id={id} setPlayerName={setPlayerName} setRoomCode={setRoomCode} />
 	);
 }
 

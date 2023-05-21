@@ -1,30 +1,22 @@
 import React from "react";
-import {
-	Box,
-	Button,
-	Grid,
-	Typography,
-	Paper,
-	FormGroup,
-	TextField,
-} from "@mui/material";
-import { io } from "socket.io-client";
+import { Button, Grid, FormGroup, TextField } from "@mui/material";
+// import { io } from "socket.io-client";
 import SendIcon from "@mui/icons-material/Send";
-import { v4 as uuid } from "uuid";
+// import { v4 as uuid } from "uuid";
 
-export const Login = ({ setId, setPlayerName, setRoomCode }) => {
+export const Login = ({ id, setPlayerName, setRoomCode }) => {
 	const roomCodeRef = React.useRef();
 	const nameRef = React.useRef();
 
 	const [isRoomCodeSelected, setIsRoomCodeSelected] = React.useState(false);
 
 	const createRoom = () => {
-		fetch(`http://192.168.1.129:5000/createroom`)
+		fetch(`http://192.168.1.129:5000/createroom?admin=${id}`)
 			.then((response) => response.json())
 			.then((data) => {
 				setPlayerName(nameRef.current.value);
 				setRoomCode(data.roomCode);
-				setId(uuid());
+				setIsRoomCodeSelected(false);
 			})
 			.catch((error) => {
 				console.error("Error:", error);
@@ -40,7 +32,6 @@ export const Login = ({ setId, setPlayerName, setRoomCode }) => {
 				if (data.exists) {
 					setPlayerName(nameRef.current.value);
 					setRoomCode(roomCode);
-					setId(uuid());
 					console.log("Room exists");
 				} else {
 					alert("Room doesn't exist");
@@ -88,27 +79,16 @@ export const Login = ({ setId, setPlayerName, setRoomCode }) => {
 							endAdornment: (
 								<SendIcon
 									color="primary"
-									onClick={
-										// () => alert("hello")
-										() => joinRoom(roomCodeRef.current.value)
-									}
+									onClick={() => joinRoom(roomCodeRef.current.value)}
 								/>
 							),
 						}}
 					/>
-					{/* <TextField
-						inputProps={{ style: { textAlign: "center" } }}
-						className="w-3/4"
-						id="player-name"
-						label="Enter your name"
-						variant="outlined"
-						inputRef={nameRef}
-					/> */}
 					<Button
 						className="h-12 w-3/4"
 						variant="contained"
 						sx={{ m: 3 }}
-						onClick={() => createRoom(nameRef.current.value)}
+						onClick={() => createRoom()}
 					>
 						Create New Game
 					</Button>
