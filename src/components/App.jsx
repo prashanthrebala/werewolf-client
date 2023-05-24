@@ -4,17 +4,19 @@ import { GameLobby } from "./GameLobby";
 import { Layout } from "./Layout";
 import React, { useState, useEffect } from "react";
 import { v4 as uuid } from "uuid";
+import { NightPhase } from "./NightPhase";
 
 function App() {
 	const prefixedKey = "werewolf-client-key";
-	let id = localStorage.getItem(prefixedKey);
+	let id = sessionStorage.getItem(prefixedKey);
 	if (id == null) {
-		localStorage.setItem(prefixedKey, uuid());
+		sessionStorage.setItem(prefixedKey, uuid());
 	}
 
 	const [playerName, setPlayerName] = useState();
 	const [roomCode, setRoomCode] = useState(null);
 	const [isGameRunning, setIsGameRunning] = useState(false);
+	const [roomDetails, setRoomDetails] = useState({});
 
 	useEffect(() => {
 		fetch(`http://192.168.1.129:5000/whereami?id=${id}`)
@@ -30,9 +32,13 @@ function App() {
 	return roomCode ? (
 		<SocketProvider id={id} playerName={playerName} roomCode={roomCode}>
 			{isGameRunning ? (
-				<Layout />
+				<NightPhase id={id} roomDetails={roomDetails} />
 			) : (
-				<GameLobby roomCode={roomCode} setIsGameRunning={setIsGameRunning} />
+				<GameLobby
+					roomCode={roomCode}
+					setIsGameRunning={setIsGameRunning}
+					setRoomDetails={setRoomDetails}
+				/>
 			)}
 		</SocketProvider>
 	) : (

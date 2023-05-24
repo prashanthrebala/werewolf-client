@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Grid, Typography } from "@mui/material";
 import { useSocket } from "../contexts/SocketProvider";
 
-export const GameLobby = ({ roomCode, setIsGameRunning }) => {
+export const GameLobby = ({ roomCode, setIsGameRunning, setRoomDetails }) => {
 	const [roomInfo, setRoomInfo] = React.useState({ playerList: [] });
 	const { socket } = useSocket();
 	console.log("ROOMDATA", roomInfo);
@@ -10,13 +10,21 @@ export const GameLobby = ({ roomCode, setIsGameRunning }) => {
 	React.useEffect(() => {
 		if (socket == null) return;
 		socket.on("playerUpdate", (roomData) => {
+			alert(JSON.stringify(roomData, null, 2));
 			setRoomInfo(roomData);
 		});
-		socket.on("gameStarted", () => {
+		// socket.on("gameStarted", () => {
+		// 	setIsGameRunning(true);
+		// });
+		socket.on("nightPhase", (value) => {
+			// alert(JSON.stringify(value, null, 2));
+			// alert(value);
+			setRoomDetails(value);
 			setIsGameRunning(true);
 		});
+		socket.on("lynchPhase", () => {});
 		console.log("socketUpdated", socket);
-	}, [socket, setIsGameRunning]);
+	}, [socket, setIsGameRunning, setRoomDetails]);
 
 	return (
 		<Grid
