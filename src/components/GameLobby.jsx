@@ -10,15 +10,9 @@ export const GameLobby = ({ roomCode, setIsGameRunning, setRoomDetails }) => {
 	React.useEffect(() => {
 		if (socket == null) return;
 		socket.on("playerUpdate", (roomData) => {
-			alert(JSON.stringify(roomData, null, 2));
 			setRoomInfo(roomData);
 		});
-		// socket.on("gameStarted", () => {
-		// 	setIsGameRunning(true);
-		// });
 		socket.on("nightPhase", (value) => {
-			// alert(JSON.stringify(value, null, 2));
-			// alert(value);
 			setRoomDetails(value);
 			setIsGameRunning(true);
 		});
@@ -46,12 +40,12 @@ export const GameLobby = ({ roomCode, setIsGameRunning, setRoomDetails }) => {
 					flex justify-center \
 					items-center border \
               text-white border-zinc-50 \
-              rounded-md ${idx === 3 ? "bg-slate-600" : ""}`}
+              rounded-md ${idx === 30 ? "bg-slate-600" : ""}`}
 						key={idx}
 					>
 						<Grid container justifyContent={"flex-end"}>
 							<Grid item xs={8} className="overflow-hidden text-center">
-								{playerInfo.slice(0, 8)}
+								{roomInfo["playerList"][playerInfo].playerObject.playerName}
 							</Grid>
 							<Grid item xs={2}>
 								{/* {idx} */}
@@ -62,8 +56,6 @@ export const GameLobby = ({ roomCode, setIsGameRunning, setRoomDetails }) => {
 			})}
 			<Button
 				onClick={() => {
-					// alert(socket.id);
-					// setIsGameRunning(true);
 					socket.emit("startGame");
 				}}
 			>

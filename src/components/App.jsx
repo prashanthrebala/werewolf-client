@@ -1,7 +1,6 @@
 import { SocketProvider } from "../contexts/SocketProvider";
 import { Login } from "./Login";
 import { GameLobby } from "./GameLobby";
-import { Layout } from "./Layout";
 import React, { useState, useEffect } from "react";
 import { v4 as uuid } from "uuid";
 import { NightPhase } from "./NightPhase";
