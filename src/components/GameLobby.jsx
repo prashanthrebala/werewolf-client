@@ -16,6 +16,10 @@ export const GameLobby = ({ roomCode, setIsGameRunning, setRoomDetails }) => {
 			setRoomDetails(value);
 			setIsGameRunning(true);
 		});
+		socket.on("dayPhase", (value) => {
+			alert(value.message);
+			setIsGameRunning(false);
+		});
 		socket.on("lynchPhase", () => {});
 		console.log("socketUpdated", socket);
 	}, [socket, setIsGameRunning, setRoomDetails]);

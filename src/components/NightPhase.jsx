@@ -1,6 +1,7 @@
 import React from "react";
-import { Grid, Typography } from "@mui/material";
+import { Grid, Typography, Button } from "@mui/material";
 import { characters } from "../utils/roles";
+import { useSocket } from "../contexts/SocketProvider";
 
 export const NightPhase = ({ id, roomDetails }) => {
 	console.log("Details", JSON.stringify(roomDetails, null, 2));
@@ -8,6 +9,14 @@ export const NightPhase = ({ id, roomDetails }) => {
 	const playerList = roomDetails["playerList"];
 	const me = playerList[id].playerObject;
 	const myDetails = characters[me["role"]];
+	const [selectedItem, setSelectedItem] = React.useState(-1);
+	const { socket } = useSocket();
+
+	// React.useEffect(() => {
+	// 	socket.on("dayPhase", (value) => {
+	// 		alert(value);
+	// 	});
+	// }, [socket]);
 
 	return (
 		<Grid
@@ -38,7 +47,9 @@ export const NightPhase = ({ id, roomDetails }) => {
               items-center border \
               text-white border-zinc-50 \
               rounded-md ${idx === 30 ? "bg-slate-600" : ""}`}
-							onClick={() => {}}
+							onClick={() => {
+								setSelectedItem(playerId);
+							}}
 							key={idx}
 						>
 							<Grid container justifyContent={"flex-end"}>
@@ -52,6 +63,18 @@ export const NightPhase = ({ id, roomDetails }) => {
 						</button>
 					);
 				})}
+			<Button
+				onClick={() => {
+					socket.emit(
+						"playerAction",
+						myDetails["action"],
+						me.playerId,
+						selectedItem
+					);
+				}}
+			>
+				Confirm Choice
+			</Button>
 		</Grid>
 	);
 };
