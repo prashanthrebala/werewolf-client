@@ -1,8 +1,9 @@
 import React from "react";
 import { Button, Grid, Typography } from "@mui/material";
 import { useSocket } from "../contexts/SocketProvider";
+import { GAME_STATE } from "../utils/constants";
 
-export const GameLobby = ({ roomCode, setIsGameRunning, setRoomDetails }) => {
+export const GameLobby = ({ roomCode, setGameState, setRoomDetails }) => {
 	const [roomInfo, setRoomInfo] = React.useState({ playerList: [] });
 	const { socket } = useSocket();
 	console.log("ROOMDATA", roomInfo);
@@ -14,15 +15,15 @@ export const GameLobby = ({ roomCode, setIsGameRunning, setRoomDetails }) => {
 		});
 		socket.on("nightPhase", (value) => {
 			setRoomDetails(value);
-			setIsGameRunning(true);
+			setGameState(GAME_STATE.NIGHT);
 		});
 		socket.on("dayPhase", (value) => {
 			alert(value.message);
-			setIsGameRunning(false);
+			setGameState(GAME_STATE.DAY);
 		});
 		socket.on("lynchPhase", () => {});
 		console.log("socketUpdated", socket);
-	}, [socket, setIsGameRunning, setRoomDetails]);
+	}, [socket, setGameState, setRoomDetails]);
 
 	return (
 		<Grid
