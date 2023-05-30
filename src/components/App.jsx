@@ -3,6 +3,7 @@ import { Login } from "./Login";
 import { GameLobby } from "./GameLobby";
 import React, { useState, useEffect } from "react";
 import { v4 as uuid } from "uuid";
+import { DayPhase } from "./DayPhase";
 import { NightPhase } from "./NightPhase";
 import { GAME_STATE } from "../utils/constants";
 
@@ -15,7 +16,6 @@ function App() {
 
 	const [playerName, setPlayerName] = useState();
 	const [roomCode, setRoomCode] = useState(null);
-	// const [isGameRunning, setIsGameRunning] = useState(false);
 	const [gameState, setGameState] = useState(GAME_STATE.LOBBY);
 	const [roomDetails, setRoomDetails] = useState({});
 
@@ -39,7 +39,9 @@ function App() {
 					setRoomDetails={setRoomDetails}
 				/>
 			)}
-			{gameState === GAME_STATE.DAY && <h1>Hi</h1>}
+			{gameState === GAME_STATE.DAY && (
+				<DayPhase id={id} roomDetails={roomDetails} />
+			)}
 			{gameState === GAME_STATE.NIGHT && (
 				<NightPhase id={id} roomDetails={roomDetails} />
 			)}
