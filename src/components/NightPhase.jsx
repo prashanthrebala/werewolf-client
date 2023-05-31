@@ -2,6 +2,7 @@ import React from "react";
 import { Grid, Typography, Button } from "@mui/material";
 import { characters } from "../utils/roles";
 import { useSocket } from "../contexts/SocketProvider";
+import { PLAYER_STATUS } from "../utils/emojis";
 
 export const NightPhase = ({ id, roomDetails }) => {
 	console.log("Details", JSON.stringify(roomDetails, null, 2));
@@ -18,6 +19,11 @@ export const NightPhase = ({ id, roomDetails }) => {
 	// 	});
 	// }, [socket]);
 
+	/** CSS to remove button click animation on mobile
+	 * 	* {
+				-webkit-tap-highlight-color: transparent;
+			}
+	 */
 	return (
 		<Grid
 			container
@@ -44,9 +50,13 @@ export const NightPhase = ({ id, roomDetails }) => {
 						<button
 							className={`h-10 w-full m-2 \
               flex justify-center \
-              items-center border \
-              text-white border-zinc-50 \
-              rounded-md ${idx === 30 ? "bg-slate-600" : ""}`}
+              items-center border-2 \
+              rounded-md \
+              ${
+								playerId === selectedItem
+									? "border-green-500 text-green-500"
+									: "border-zinc-50 text-white"
+							}`}
 							onClick={() => {
 								setSelectedItem(playerId);
 							}}
@@ -57,7 +67,9 @@ export const NightPhase = ({ id, roomDetails }) => {
 									{playerList[playerId].playerObject["playerName"]}
 								</Grid>
 								<Grid item xs={2}>
-									{/* {idx} */}
+									{playerList[playerId].playerObject.alive
+										? PLAYER_STATUS.ALIVE
+										: PLAYER_STATUS.DEAD}
 								</Grid>
 							</Grid>
 						</button>

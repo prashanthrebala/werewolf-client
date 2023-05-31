@@ -15,10 +15,11 @@ export const DayPhase = ({ id, roomDetails }) => {
 	});
 	const me = playerList[id].playerObject;
 	const [selectedItem, setSelectedItem] = React.useState(-1);
+	const [locked, setLocked] = React.useState(false);
 	const { socket } = useSocket();
 
 	React.useEffect(() => {
-		socket.on("lynchUpdates", (votes) => {
+		const handleLynchUpdates = (votes) => {
 			const newLynchCount = {};
 			for (const playerId of Object.values(votes)) {
 				newLynchCount[playerId] = (newLynchCount[playerId] || 0) + 1;
@@ -30,7 +31,13 @@ export const DayPhase = ({ id, roomDetails }) => {
 				}
 				return { ...updatedValue, ...newLynchCount };
 			});
-		});
+		};
+
+		socket.on("lynchUpdates", handleLynchUpdates);
+
+		return () => {
+			socket.off("lynchUpdates", handleLynchUpdates);
+		};
 	}, [socket]);
 
 	return (
@@ -52,12 +59,19 @@ export const DayPhase = ({ id, roomDetails }) => {
 				return (
 					<button
 						className={`h-10 w-full m-2 \
-              flex justify-center \
-              items-center border \
-              text-white border-zinc-50 \
-              rounded-md ${idx === 30 ? "bg-slate-600" : ""}`}
+						flex justify-center \
+						items-center border-2 \
+						rounded-md \
+						${
+							playerId === selectedItem
+								? "border-green-500 text-green-500"
+								: "border-zinc-50 text-white"
+						}`}
 						onClick={() => {
-							socket.emit("lynchTime", id, playerId);
+							if (!locked) {
+								setSelectedItem(playerId);
+								socket.emit("lynchTime", me.playerId, playerId);
+							}
 						}}
 						key={idx}
 					>
@@ -74,10 +88,13 @@ export const DayPhase = ({ id, roomDetails }) => {
 			})}
 			<Button
 				onClick={() => {
-					socket.emit("lynchTime", me.playerId, selectedItem);
+					if (!locked) {
+						setLocked(true);
+						socket.emit("lynchConfirm");
+					}
 				}}
 			>
-				Confirm Choice
+				{locked ? "Waiting on other players" : "Confirm Choice"}
 			</Button>
 		</Grid>
 	);
