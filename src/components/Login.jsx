@@ -1,14 +1,12 @@
 import React from "react";
 import { Button, Grid, FormGroup, TextField } from "@mui/material";
 // import { io } from "socket.io-client";
-import SendIcon from "@mui/icons-material/Send";
+import { JoinRoom } from "./JoinRoom";
 // import { v4 as uuid } from "uuid";
 
 export const Login = ({ id, setPlayerName, setRoomCode }) => {
 	const roomCodeRef = React.useRef();
 	const nameRef = React.useRef();
-
-	const [isRoomCodeSelected, setIsRoomCodeSelected] = React.useState(false);
 
 	const createRoom = () => {
 		fetch(`http://192.168.1.129:5000/createroom?admin=${id}`)
@@ -16,7 +14,6 @@ export const Login = ({ id, setPlayerName, setRoomCode }) => {
 			.then((data) => {
 				setPlayerName(nameRef.current.value);
 				setRoomCode(data.roomCode);
-				setIsRoomCodeSelected(false);
 			})
 			.catch((error) => {
 				console.error("Error:", error);
@@ -63,27 +60,7 @@ export const Login = ({ id, setPlayerName, setRoomCode }) => {
 						sx={{ m: 3 }}
 						inputProps={{ style: { textAlign: "center" } }}
 					/>
-					<TextField
-						id="standard-name"
-						className="h-12 w-3/4"
-						inputRef={roomCodeRef}
-						onFocus={() => {
-							// setIsRoomCodeSelected(true);
-							// nameRef.current.scrollIntoView();
-						}}
-						{...{ label: isRoomCodeSelected ? "Enter a Room Code" : "" }}
-						placeholder="Join a room"
-						sx={{ m: 3 }}
-						inputProps={{ style: { textAlign: "center" } }}
-						InputProps={{
-							endAdornment: (
-								<SendIcon
-									color="primary"
-									onClick={() => joinRoom(roomCodeRef.current.value)}
-								/>
-							),
-						}}
-					/>
+					<JoinRoom roomCodeRef={roomCodeRef} joinRoom={joinRoom} />
 					<Button
 						className="h-12 w-3/4"
 						variant="contained"
