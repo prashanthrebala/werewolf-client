@@ -1,7 +1,8 @@
 import React from "react";
-import { Button, Grid, FormGroup, TextField } from "@mui/material";
+import { Button, Grid, FormGroup, TextField, Box } from "@mui/material";
 // import { io } from "socket.io-client";
 import { JoinRoom } from "./JoinRoom";
+import werewolf from "../assets/werewolf-logo.png";
 // import { v4 as uuid } from "uuid";
 
 export const Login = ({ id, setPlayerName, setRoomCode }) => {
@@ -59,6 +60,16 @@ export const Login = ({ id, setPlayerName, setRoomCode }) => {
 						className="h-12 w-3/4"
 						sx={{ m: 3 }}
 						inputProps={{ style: { textAlign: "center" } }}
+					/>
+					<Box
+						sx={{
+							background: `url(${werewolf})`,
+							backgroundRepeat: "no-repeat",
+							backgroundSize: "contain",
+							backgroundPosition: "center",
+						}}
+						height={"12rem"}
+						width={"12rem"}
 					/>
 					<JoinRoom roomCodeRef={roomCodeRef} joinRoom={joinRoom} />
 					<Button
