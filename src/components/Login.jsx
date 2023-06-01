@@ -1,5 +1,12 @@
 import React from "react";
-import { Button, Grid, FormGroup, TextField, Box } from "@mui/material";
+import {
+	Button,
+	Grid,
+	FormGroup,
+	TextField,
+	Box,
+	Divider,
+} from "@mui/material";
 // import { io } from "socket.io-client";
 import { JoinRoom } from "./JoinRoom";
 import werewolf from "../assets/werewolf-logo.png";
@@ -72,10 +79,11 @@ export const Login = ({ id, setPlayerName, setRoomCode }) => {
 						width={"12rem"}
 					/>
 					<JoinRoom roomCodeRef={roomCodeRef} joinRoom={joinRoom} />
+					<Divider className="w-3/4 text-gray-400">OR</Divider>
 					<Button
 						className="h-12 w-3/4"
-						variant="contained"
-						sx={{ m: 3 }}
+						variant="outlined"
+						sx={{ m: 3, textTransform: "none", border: "2px solid" }}
 						onClick={() => createRoom()}
 					>
 						Create New Game
