@@ -1,10 +1,12 @@
 import React from "react";
-import { Button, Grid, Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import { useSocket } from "../contexts/SocketProvider";
 import { GAME_STATE } from "../utils/constants";
+import { StartGameButton } from "./StartGameButton";
 
 export const GameLobby = ({ id, roomCode, setGameState, setRoomDetails }) => {
 	const [roomInfo, setRoomInfo] = React.useState({ playerList: [] });
+	const playerIds = Object.keys(roomInfo.playerList);
 	const { socket } = useSocket();
 	console.log("ROOMDATA", roomInfo);
 
@@ -38,7 +40,7 @@ export const GameLobby = ({ id, roomCode, setGameState, setRoomDetails }) => {
 			<Typography variant="body1" className="text-white">
 				{`Player Count: ${Object.keys(roomInfo["playerList"]).length}`}
 			</Typography>
-			{Object.keys(roomInfo["playerList"]).map((playerInfo, idx) => {
+			{playerIds.map((playerInfo, idx) => {
 				return (
 					<div
 						className={`h-10 w-full m-2 \
@@ -59,20 +61,11 @@ export const GameLobby = ({ id, roomCode, setGameState, setRoomDetails }) => {
 					</div>
 				);
 			})}
-			{roomInfo["admin"] === id ? (
-				<Button
-					sx={{ textTransform: "none", margin: "1rem" }}
-					variant="contained"
-					color="success"
-					onClick={() => {
-						socket.emit("startGame");
-					}}
-				>
-					Start Game
-				</Button>
-			) : (
-				<div className="text-zinc-500 m-4">Wait for admin to start...</div>
-			)}
+			<StartGameButton
+				isAdmin={roomInfo["admin"] === id}
+				playerCount={playerIds.length}
+				socket={socket}
+			/>
 		</Grid>
 	);
 };
