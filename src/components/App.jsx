@@ -34,6 +34,7 @@ function App() {
 		<SocketProvider id={id} playerName={playerName} roomCode={roomCode}>
 			{gameState === GAME_STATE.LOBBY && (
 				<GameLobby
+					id={id}
 					roomCode={roomCode}
 					setGameState={setGameState}
 					setRoomDetails={setRoomDetails}

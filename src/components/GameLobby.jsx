@@ -3,7 +3,7 @@ import { Button, Grid, Typography } from "@mui/material";
 import { useSocket } from "../contexts/SocketProvider";
 import { GAME_STATE } from "../utils/constants";
 
-export const GameLobby = ({ roomCode, setGameState, setRoomDetails }) => {
+export const GameLobby = ({ id, roomCode, setGameState, setRoomDetails }) => {
 	const [roomInfo, setRoomInfo] = React.useState({ playerList: [] });
 	const { socket } = useSocket();
 	console.log("ROOMDATA", roomInfo);
@@ -59,13 +59,20 @@ export const GameLobby = ({ roomCode, setGameState, setRoomDetails }) => {
 					</div>
 				);
 			})}
-			<Button
-				onClick={() => {
-					socket.emit("startGame");
-				}}
-			>
-				Start Game
-			</Button>
+			{roomInfo["admin"] === id ? (
+				<Button
+					sx={{ textTransform: "none", margin: "1rem" }}
+					variant="contained"
+					color="success"
+					onClick={() => {
+						socket.emit("startGame");
+					}}
+				>
+					Start Game
+				</Button>
+			) : (
+				<div className="text-zinc-500 m-4">Wait for admin to start...</div>
+			)}
 		</Grid>
 	);
 };
