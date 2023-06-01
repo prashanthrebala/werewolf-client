@@ -7,10 +7,8 @@ import {
 	Box,
 	Divider,
 } from "@mui/material";
-// import { io } from "socket.io-client";
 import { JoinRoom } from "./JoinRoom";
 import werewolf from "../assets/werewolf-logo.png";
-// import { v4 as uuid } from "uuid";
 
 export const Login = ({ id, setPlayerName, setRoomCode }) => {
 	const roomCodeRef = React.useRef();

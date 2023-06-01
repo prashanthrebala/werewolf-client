@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button, Grid, Typography, Paper } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 
 export const Layout = () => {
 	const players = ["Talon", "Andy", "Kimi", "Duke", "Viking", "Prometheus"];

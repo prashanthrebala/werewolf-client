@@ -13,12 +13,6 @@ export const NightPhase = ({ id, roomDetails }) => {
 	const [selectedItem, setSelectedItem] = React.useState(-1);
 	const { socket } = useSocket();
 
-	// React.useEffect(() => {
-	// 	socket.on("dayPhase", (value) => {
-	// 		alert(value);
-	// 	});
-	// }, [socket]);
-
 	/** CSS to remove button click animation on mobile
 	 * 	* {
 				-webkit-tap-highlight-color: transparent;

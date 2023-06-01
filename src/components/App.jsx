@@ -46,15 +46,6 @@ function App() {
 			{gameState === GAME_STATE.NIGHT && (
 				<NightPhase id={id} roomDetails={roomDetails} />
 			)}
-			{/* {isGameRunning ? (
-				<NightPhase id={id} roomDetails={roomDetails} />
-			) : (
-				<GameLobby
-					roomCode={roomCode}
-					setIsGameRunning={setIsGameRunning}
-					setRoomDetails={setRoomDetails}
-				/>
-			)} */}
 		</SocketProvider>
 	) : (
 		<Login id={id} setPlayerName={setPlayerName} setRoomCode={setRoomCode} />
