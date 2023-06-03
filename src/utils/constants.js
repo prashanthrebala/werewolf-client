@@ -3,3 +3,5 @@ export const GAME_STATE = {
 	DAY: "dayPhase",
 	NIGHT: "nightPhase",
 };
+
+export const MIN_REQUIRED_PLAYERS = 3;

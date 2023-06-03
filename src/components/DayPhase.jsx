@@ -1,8 +1,9 @@
 import React from "react";
 import { Grid, Typography, Button } from "@mui/material";
 import { useSocket } from "../contexts/SocketProvider";
+import { GAME_STATE } from "../utils/constants";
 
-export const DayPhase = ({ id, roomDetails }) => {
+export const DayPhase = ({ id, roomDetails, setRoomDetails, setGameState }) => {
 	console.log("Details", JSON.stringify(roomDetails, null, 2));
 	const roomCode = roomDetails["roomCode"];
 	const playerList = roomDetails["playerList"];
@@ -33,14 +34,21 @@ export const DayPhase = ({ id, roomDetails }) => {
 			});
 		};
 
+		const backToLobby = (roomInfo) => {
+			// roomInfo isn't used but the server passes it nonetheless
+			setGameState(GAME_STATE.LOBBY);
+		};
+
 		socket.on("lynchUpdates", handleLynchUpdates);
+		socket.on("lobby", backToLobby);
 		console.log("Socket on mount Day Phase", socket);
 
 		return () => {
 			socket.off("lynchUpdates", handleLynchUpdates);
+			socket.off("lobby", backToLobby);
 			console.log("Socket Exits Day Phase", socket);
 		};
-	}, [socket]);
+	}, [socket, setGameState, setRoomDetails]);
 
 	return (
 		<Grid

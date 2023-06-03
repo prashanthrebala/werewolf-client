@@ -43,7 +43,12 @@ function App() {
 				/>
 			)}
 			{gameState === GAME_STATE.DAY && (
-				<DayPhase id={id} roomDetails={roomDetails} />
+				<DayPhase
+					id={id}
+					roomDetails={roomDetails}
+					setGameState={setGameState}
+					setRoomDetails={setRoomDetails}
+				/>
 			)}
 			{gameState === GAME_STATE.NIGHT && (
 				<NightPhase
