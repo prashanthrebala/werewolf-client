@@ -17,7 +17,8 @@ function App() {
 	const [playerName, setPlayerName] = useState();
 	const [roomCode, setRoomCode] = useState(null);
 	const [gameState, setGameState] = useState(GAME_STATE.LOBBY);
-	const [roomDetails, setRoomDetails] = useState({});
+	// TODO replace the useState to use appropriate initial object
+	const [roomDetails, setRoomDetails] = useState({ playerList: [] });
 
 	useEffect(() => {
 		fetch(`http://192.168.1.129:5000/whereami?id=${id}`)
@@ -36,6 +37,7 @@ function App() {
 				<GameLobby
 					id={id}
 					roomCode={roomCode}
+					roomDetails={roomDetails}
 					setGameState={setGameState}
 					setRoomDetails={setRoomDetails}
 				/>
@@ -44,7 +46,11 @@ function App() {
 				<DayPhase id={id} roomDetails={roomDetails} />
 			)}
 			{gameState === GAME_STATE.NIGHT && (
-				<NightPhase id={id} roomDetails={roomDetails} />
+				<NightPhase
+					id={id}
+					roomDetails={roomDetails}
+					setGameState={setGameState}
+				/>
 			)}
 		</SocketProvider>
 	) : (

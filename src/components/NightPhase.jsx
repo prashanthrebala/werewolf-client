@@ -2,9 +2,10 @@ import React from "react";
 import { Grid, Typography, Button } from "@mui/material";
 import { characters } from "../utils/roles";
 import { useSocket } from "../contexts/SocketProvider";
+import { GAME_STATE } from "../utils/constants";
 import { PLAYER_STATUS } from "../utils/emojis";
 
-export const NightPhase = ({ id, roomDetails }) => {
+export const NightPhase = ({ id, roomDetails, setGameState }) => {
 	console.log("Details", JSON.stringify(roomDetails, null, 2));
 	const roomCode = roomDetails["roomCode"];
 	const playerList = roomDetails["playerList"];
@@ -12,6 +13,23 @@ export const NightPhase = ({ id, roomDetails }) => {
 	const myDetails = characters[me["role"]];
 	const [selectedItem, setSelectedItem] = React.useState(-1);
 	const { socket } = useSocket();
+
+	React.useEffect(() => {
+		if (socket == null) return;
+
+		const handleDayPhaseStart = (value) => {
+			alert(value.message);
+			setGameState(GAME_STATE.DAY);
+		};
+
+		socket.on("dayPhase", handleDayPhaseStart);
+		console.log("Socket on mount Night Phase", socket);
+
+		return () => {
+			socket.off("dayPhase", handleDayPhaseStart);
+			console.log("Socket Exits Night Phase", socket);
+		};
+	}, [socket, setGameState]);
 
 	/** CSS to remove button click animation on mobile
 	 * 	* {

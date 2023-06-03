@@ -4,27 +4,45 @@ import { useSocket } from "../contexts/SocketProvider";
 import { GAME_STATE } from "../utils/constants";
 import { StartGameButton } from "./StartGameButton";
 
-export const GameLobby = ({ id, roomCode, setGameState, setRoomDetails }) => {
-	const [roomInfo, setRoomInfo] = React.useState({ playerList: [] });
-	const playerIds = Object.keys(roomInfo.playerList);
+export const GameLobby = ({
+	id,
+	roomCode,
+	setGameState,
+	roomDetails,
+	setRoomDetails,
+}) => {
+	// const [roomInfo, setRoomInfo] = React.useState({ playerList: [] });
+	const playerIds = Object.keys(roomDetails.playerList);
 	const { socket } = useSocket();
-	console.log("ROOMDATA", roomInfo);
+	// console.log("ROOMDATA", roomInfo);
 
 	React.useEffect(() => {
 		if (socket == null) return;
-		socket.on("playerUpdate", (roomData) => {
-			setRoomInfo(roomData);
-		});
-		socket.on("nightPhase", (value) => {
-			setRoomDetails(value);
+
+		const handlePlayerUpdate = (roomData) => {
+			setRoomDetails(roomData);
+		};
+
+		const handleNightPhaseStart = (roomData) => {
+			setRoomDetails(roomData);
 			setGameState(GAME_STATE.NIGHT);
-		});
-		socket.on("dayPhase", (value) => {
-			alert(value.message);
-			setGameState(GAME_STATE.DAY);
-		});
-		socket.on("lynchPhase", () => {});
-		console.log("socketUpdated", socket);
+		};
+
+		socket.on("playerUpdate", handlePlayerUpdate);
+		socket.on("nightPhase", handleNightPhaseStart);
+
+		// socket.on("dayPhase", (value) => {
+		// 	alert(value.message);
+		// 	setGameState(GAME_STATE.DAY);
+		// });
+		// socket.on("lynchPhase", () => {});
+		console.log("Socket on mount Game Lobby", socket);
+
+		return () => {
+			socket.off("playerUpdate", handlePlayerUpdate);
+			socket.off("nightPhase", handleNightPhaseStart);
+			console.log("Socket Exits Game  Lobby", socket);
+		};
 	}, [socket, setGameState, setRoomDetails]);
 
 	return (
@@ -38,7 +56,7 @@ export const GameLobby = ({ id, roomCode, setGameState, setRoomDetails }) => {
 				{roomCode}
 			</Typography>
 			<Typography variant="body1" className="text-white">
-				{`Player Count: ${Object.keys(roomInfo["playerList"]).length}`}
+				{`Player Count: ${Object.keys(roomDetails["playerList"]).length}`}
 			</Typography>
 			{playerIds.map((playerInfo, idx) => {
 				return (
@@ -52,7 +70,7 @@ export const GameLobby = ({ id, roomCode, setGameState, setRoomDetails }) => {
 					>
 						<Grid container justifyContent={"flex-end"}>
 							<Grid item xs={8} className="overflow-hidden text-center">
-								{roomInfo["playerList"][playerInfo].playerObject.playerName}
+								{roomDetails["playerList"][playerInfo].playerObject.playerName}
 							</Grid>
 							<Grid item xs={2}>
 								{/* {idx} */}
@@ -62,7 +80,7 @@ export const GameLobby = ({ id, roomCode, setGameState, setRoomDetails }) => {
 				);
 			})}
 			<StartGameButton
-				isAdmin={roomInfo["admin"] === id}
+				isAdmin={roomDetails["admin"] === id}
 				playerCount={playerIds.length}
 				socket={socket}
 			/>

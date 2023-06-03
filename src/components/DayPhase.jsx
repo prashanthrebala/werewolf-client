@@ -34,9 +34,11 @@ export const DayPhase = ({ id, roomDetails }) => {
 		};
 
 		socket.on("lynchUpdates", handleLynchUpdates);
+		console.log("Socket on mount Day Phase", socket);
 
 		return () => {
 			socket.off("lynchUpdates", handleLynchUpdates);
+			console.log("Socket Exits Day Phase", socket);
 		};
 	}, [socket]);
 
