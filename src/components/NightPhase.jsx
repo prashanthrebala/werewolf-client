@@ -60,6 +60,7 @@ export const NightPhase = ({ id, roomDetails, setGameState }) => {
 				.map((playerId, idx) => {
 					return (
 						<button
+							disabled={!me.isAlive}
 							className={`h-10 w-full m-2 \
               flex justify-center \
               items-center border-2 \
@@ -79,7 +80,7 @@ export const NightPhase = ({ id, roomDetails, setGameState }) => {
 									{playerList[playerId].playerObject["playerName"]}
 								</Grid>
 								<Grid item xs={2}>
-									{playerList[playerId].playerObject.alive
+									{playerList[playerId].playerObject.isAlive
 										? PLAYER_STATUS.ALIVE
 										: PLAYER_STATUS.DEAD}
 								</Grid>

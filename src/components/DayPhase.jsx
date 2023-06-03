@@ -68,6 +68,7 @@ export const DayPhase = ({ id, roomDetails, setRoomDetails, setGameState }) => {
 			{Object.keys(playerList).map((playerId, idx) => {
 				return (
 					<button
+						disabled={!me.isAlive}
 						className={`h-10 w-full m-2 \
 						flex justify-center \
 						items-center border-2 \
@@ -96,16 +97,20 @@ export const DayPhase = ({ id, roomDetails, setRoomDetails, setGameState }) => {
 					</button>
 				);
 			})}
-			<Button
-				onClick={() => {
-					if (!locked) {
-						setLocked(true);
-						socket.emit("lynchConfirm");
-					}
-				}}
-			>
-				{locked ? "Waiting on other players" : "Confirm Choice"}
-			</Button>
+			{me.isAlive ? (
+				<Button
+					onClick={() => {
+						if (!locked) {
+							setLocked(true);
+							socket.emit("lynchConfirm");
+						}
+					}}
+				>
+					{locked ? "Waiting on other players" : "Confirm Choice"}
+				</Button>
+			) : (
+				<div className="text-zinc-500 m-4">You are dead.</div>
+			)}
 		</Grid>
 	);
 };
