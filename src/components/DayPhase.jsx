@@ -1,11 +1,14 @@
 import React from "react";
-import { Grid, Typography, Button } from "@mui/material";
+import { Box, Grid, Typography, Button } from "@mui/material";
 import { useSocket } from "../contexts/SocketProvider";
+import { GAME_STATE } from "../utils/constants";
+import { PLAYER_STATUS } from "../utils/emojis";
 
-export const DayPhase = ({ id, roomDetails }) => {
+export const DayPhase = ({ id, roomDetails, setRoomDetails, setGameState }) => {
 	console.log("Details", JSON.stringify(roomDetails, null, 2));
 	const roomCode = roomDetails["roomCode"];
 	const playerList = roomDetails["playerList"];
+	const [totalVotes, setTotalVotes] = React.useState(1);
 	const [lynchCount, setLynchCount] = React.useState(() => {
 		const ret = {};
 		Object.keys(playerList).forEach((playerId) => {
@@ -24,6 +27,7 @@ export const DayPhase = ({ id, roomDetails }) => {
 			for (const playerId of Object.values(votes)) {
 				newLynchCount[playerId] = (newLynchCount[playerId] || 0) + 1;
 			}
+			setTotalVotes(Object.keys(votes).length || 1);
 			setLynchCount((prevValue) => {
 				const updatedValue = {};
 				for (const key of Object.keys(prevValue)) {
@@ -33,12 +37,28 @@ export const DayPhase = ({ id, roomDetails }) => {
 			});
 		};
 
+		const backToLobby = (roomInfo) => {
+			// roomInfo isn't used but the server passes it nonetheless
+			setGameState(GAME_STATE.LOBBY);
+		};
+
+		const handleNightPhaseStart = (roomData) => {
+			setRoomDetails(roomData);
+			setGameState(GAME_STATE.NIGHT);
+		};
+
 		socket.on("lynchUpdates", handleLynchUpdates);
+		socket.on("nightPhase", handleNightPhaseStart);
+		socket.on("lobby", backToLobby);
+		console.log("Socket on mount Day Phase", socket);
 
 		return () => {
 			socket.off("lynchUpdates", handleLynchUpdates);
+			socket.off("nightPhase", handleNightPhaseStart);
+			socket.off("lobby", backToLobby);
+			console.log("Socket Exits Day Phase", socket);
 		};
-	}, [socket]);
+	}, [socket, setGameState, setRoomDetails]);
 
 	return (
 		<Grid
@@ -56,16 +76,16 @@ export const DayPhase = ({ id, roomDetails }) => {
 				}
 			</Typography>
 			{Object.keys(playerList).map((playerId, idx) => {
+				const thresh = Math.round((lynchCount[playerId] / totalVotes) * 100);
+				const disabled =
+					!me.isAlive || !playerList[playerId].playerObject.isAlive;
 				return (
 					<button
-						className={`h-10 w-full m-2 \
-						flex justify-center \
-						items-center border-2 \
-						rounded-md \
-						${
-							playerId === selectedItem
-								? "border-green-500 text-green-500"
-								: "border-zinc-50 text-white"
+						disabled={disabled}
+						className={`h-10 w-full m-2 flex justify-center items-center border-2 rounded-md relative ${
+							!disabled
+								? "border-zinc-50 text-white"
+								: "border-stone-700 text-stone-600"
 						}`}
 						onClick={() => {
 							if (!locked) {
@@ -75,27 +95,41 @@ export const DayPhase = ({ id, roomDetails }) => {
 						}}
 						key={idx}
 					>
-						<Grid container justifyContent={"flex-end"}>
+						<Grid className="z-0 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full">
+							<Box
+								className={`h-9 rounded transition-width duration-200 ${
+									playerId === selectedItem ? "bg-indigo-700" : "bg-blue-950"
+								}`}
+								sx={{ width: `${thresh}%` }}
+							/>
+						</Grid>
+						<Grid container justifyContent={"flex-end"} sx={{ zIndex: 2 }}>
 							<Grid item xs={8} className="overflow-hidden">
 								{playerList[playerId].playerObject["playerName"]}
 							</Grid>
 							<Grid item xs={2}>
-								{lynchCount[playerId]}
+								{playerList[playerId].playerObject.isAlive
+									? lynchCount[playerId] || ""
+									: PLAYER_STATUS.DEAD}
 							</Grid>
 						</Grid>
 					</button>
 				);
 			})}
-			<Button
-				onClick={() => {
-					if (!locked) {
-						setLocked(true);
-						socket.emit("lynchConfirm");
-					}
-				}}
-			>
-				{locked ? "Waiting on other players" : "Confirm Choice"}
-			</Button>
+			{me.isAlive ? (
+				<Button
+					onClick={() => {
+						if (!locked) {
+							setLocked(true);
+							socket.emit("lynchConfirm");
+						}
+					}}
+				>
+					{locked ? "Waiting on other players" : "Confirm Choice"}
+				</Button>
+			) : (
+				<div className="text-zinc-500 m-4">You are dead</div>
+			)}
 		</Grid>
 	);
 };

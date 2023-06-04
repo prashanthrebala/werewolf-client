@@ -1,28 +1,48 @@
 import React from "react";
-import { Button, Grid, Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import { useSocket } from "../contexts/SocketProvider";
 import { GAME_STATE } from "../utils/constants";
+import { StartGameButton } from "./StartGameButton";
 
-export const GameLobby = ({ roomCode, setGameState, setRoomDetails }) => {
-	const [roomInfo, setRoomInfo] = React.useState({ playerList: [] });
+export const GameLobby = ({
+	id,
+	roomCode,
+	setGameState,
+	roomDetails,
+	setRoomDetails,
+}) => {
+	// const [roomInfo, setRoomInfo] = React.useState({ playerList: [] });
+	const playerIds = Object.keys(roomDetails.playerList);
 	const { socket } = useSocket();
-	console.log("ROOMDATA", roomInfo);
+	// console.log("ROOMDATA", roomInfo);
 
 	React.useEffect(() => {
 		if (socket == null) return;
-		socket.on("playerUpdate", (roomData) => {
-			setRoomInfo(roomData);
-		});
-		socket.on("nightPhase", (value) => {
-			setRoomDetails(value);
+
+		const handlePlayerUpdate = (roomData) => {
+			setRoomDetails(roomData);
+		};
+
+		const handleNightPhaseStart = (roomData) => {
+			setRoomDetails(roomData);
 			setGameState(GAME_STATE.NIGHT);
-		});
-		socket.on("dayPhase", (value) => {
-			alert(value.message);
-			setGameState(GAME_STATE.DAY);
-		});
-		socket.on("lynchPhase", () => {});
-		console.log("socketUpdated", socket);
+		};
+
+		socket.on("playerUpdate", handlePlayerUpdate);
+		socket.on("nightPhase", handleNightPhaseStart);
+
+		// socket.on("dayPhase", (value) => {
+		// 	alert(value.message);
+		// 	setGameState(GAME_STATE.DAY);
+		// });
+		// socket.on("lynchPhase", () => {});
+		console.log("Socket on mount Game Lobby", socket);
+
+		return () => {
+			socket.off("playerUpdate", handlePlayerUpdate);
+			socket.off("nightPhase", handleNightPhaseStart);
+			console.log("Socket Exits Game  Lobby", socket);
+		};
 	}, [socket, setGameState, setRoomDetails]);
 
 	return (
@@ -36,21 +56,17 @@ export const GameLobby = ({ roomCode, setGameState, setRoomDetails }) => {
 				{roomCode}
 			</Typography>
 			<Typography variant="body1" className="text-white">
-				{`Player Count: ${Object.keys(roomInfo["playerList"]).length}`}
+				{`Player Count: ${Object.keys(roomDetails["playerList"]).length}`}
 			</Typography>
-			{Object.keys(roomInfo["playerList"]).map((playerInfo, idx) => {
+			{playerIds.map((playerInfo, idx) => {
 				return (
 					<div
-						className={`h-10 w-full m-2 \
-					flex justify-center \
-					items-center border \
-              text-white border-zinc-50 \
-              rounded-md ${idx === 30 ? "bg-slate-600" : ""}`}
+						className="h-10 w-full m-2 flex justify-center items-center border text-white border-zinc-50 rounded-md"
 						key={idx}
 					>
 						<Grid container justifyContent={"flex-end"}>
 							<Grid item xs={8} className="overflow-hidden text-center">
-								{roomInfo["playerList"][playerInfo].playerObject.playerName}
+								{roomDetails["playerList"][playerInfo].playerObject.playerName}
 							</Grid>
 							<Grid item xs={2}>
 								{/* {idx} */}
@@ -59,13 +75,11 @@ export const GameLobby = ({ roomCode, setGameState, setRoomDetails }) => {
 					</div>
 				);
 			})}
-			<Button
-				onClick={() => {
-					socket.emit("startGame");
-				}}
-			>
-				Start Game
-			</Button>
+			<StartGameButton
+				isAdmin={roomDetails["admin"] === id}
+				playerCount={playerIds.length}
+				socket={socket}
+			/>
 		</Grid>
 	);
 };
