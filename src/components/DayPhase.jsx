@@ -41,12 +41,19 @@ export const DayPhase = ({ id, roomDetails, setRoomDetails, setGameState }) => {
 			setGameState(GAME_STATE.LOBBY);
 		};
 
+		const handleNightPhaseStart = (roomData) => {
+			setRoomDetails(roomData);
+			setGameState(GAME_STATE.NIGHT);
+		};
+
 		socket.on("lynchUpdates", handleLynchUpdates);
+		socket.on("nightPhase", handleNightPhaseStart);
 		socket.on("lobby", backToLobby);
 		console.log("Socket on mount Day Phase", socket);
 
 		return () => {
 			socket.off("lynchUpdates", handleLynchUpdates);
+			socket.off("nightPhase", handleNightPhaseStart);
 			socket.off("lobby", backToLobby);
 			console.log("Socket Exits Day Phase", socket);
 		};
