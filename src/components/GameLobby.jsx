@@ -61,11 +61,7 @@ export const GameLobby = ({
 			{playerIds.map((playerInfo, idx) => {
 				return (
 					<div
-						className={`h-10 w-full m-2 \
-					flex justify-center \
-					items-center border \
-              text-white border-zinc-50 \
-              rounded-md ${idx === 30 ? "bg-slate-600" : ""}`}
+						className="h-10 w-full m-2 flex justify-center items-center border text-white border-zinc-50 rounded-md"
 						key={idx}
 					>
 						<Grid container justifyContent={"flex-end"}>

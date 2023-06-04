@@ -3,7 +3,7 @@ import { Grid, Typography, Button } from "@mui/material";
 import { characters } from "../utils/roles";
 import { useSocket } from "../contexts/SocketProvider";
 import { GAME_STATE } from "../utils/constants";
-import { PLAYER_STATUS } from "../utils/emojis";
+import { NightPhaseButton } from "./NightPhaseButton";
 
 export const NightPhase = ({ id, roomDetails, setGameState }) => {
 	console.log("Details", JSON.stringify(roomDetails, null, 2));
@@ -56,38 +56,17 @@ export const NightPhase = ({ id, roomDetails, setGameState }) => {
 				{myDetails["prompt"]}
 			</Typography>
 			{Object.keys(playerList)
-				.filter((playerId) => playerId !== id)
-				.map((playerId, idx) => {
-					return (
-						<button
-							disabled={!me.isAlive}
-							className={`h-10 w-full m-2 \
-              flex justify-center \
-              items-center border-2 \
-              rounded-md \
-              ${
-								playerId === selectedItem
-									? "border-green-500 text-green-500"
-									: "border-zinc-50 text-white"
-							}`}
-							onClick={() => {
-								setSelectedItem(playerId);
-							}}
-							key={idx}
-						>
-							<Grid container justifyContent={"flex-end"}>
-								<Grid item xs={8} className="overflow-hidden">
-									{playerList[playerId].playerObject["playerName"]}
-								</Grid>
-								<Grid item xs={2}>
-									{playerList[playerId].playerObject.isAlive
-										? PLAYER_STATUS.ALIVE
-										: PLAYER_STATUS.DEAD}
-								</Grid>
-							</Grid>
-						</button>
-					);
-				})}
+				.filter((playerId) => playerId !== id || !me.isAlive)
+				.map((playerId, idx) => (
+					<NightPhaseButton
+						imAlive={me.isAlive}
+						playerId={playerId}
+						playerList={playerList}
+						selectedItem={selectedItem}
+						setSelectedItem={setSelectedItem}
+						key={idx}
+					/>
+				))}
 			<Button
 				onClick={() => {
 					socket.emit(
