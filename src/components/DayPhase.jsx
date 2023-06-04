@@ -106,7 +106,7 @@ export const DayPhase = ({ id, roomDetails, setRoomDetails, setGameState }) => {
 								{playerList[playerId].playerObject["playerName"]}
 							</Grid>
 							<Grid item xs={2}>
-								{lynchCount[playerId]}
+								{lynchCount[playerId] || ""}
 							</Grid>
 						</Grid>
 					</button>
