@@ -55,6 +55,7 @@ function App() {
 					id={id}
 					roomDetails={roomDetails}
 					setGameState={setGameState}
+					setRoomDetails={setRoomDetails}
 				/>
 			)}
 		</SocketProvider>

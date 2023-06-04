@@ -5,7 +5,12 @@ import { useSocket } from "../contexts/SocketProvider";
 import { GAME_STATE } from "../utils/constants";
 import { NightPhaseButton } from "./NightPhaseButton";
 
-export const NightPhase = ({ id, roomDetails, setGameState }) => {
+export const NightPhase = ({
+	id,
+	roomDetails,
+	setGameState,
+	setRoomDetails,
+}) => {
 	console.log("Details", JSON.stringify(roomDetails, null, 2));
 	const roomCode = roomDetails["roomCode"];
 	const playerList = roomDetails["playerList"];
@@ -17,9 +22,10 @@ export const NightPhase = ({ id, roomDetails, setGameState }) => {
 	React.useEffect(() => {
 		if (socket == null) return;
 
-		const handleDayPhaseStart = (value) => {
+		const handleDayPhaseStart = (value, roomData) => {
 			alert(value.message);
 			setGameState(GAME_STATE.DAY);
+			setRoomDetails(roomData);
 		};
 
 		socket.on("dayPhase", handleDayPhaseStart);
@@ -29,7 +35,7 @@ export const NightPhase = ({ id, roomDetails, setGameState }) => {
 			socket.off("dayPhase", handleDayPhaseStart);
 			console.log("Socket Exits Night Phase", socket);
 		};
-	}, [socket, setGameState]);
+	}, [socket, setGameState, setRoomDetails]);
 
 	/** CSS to remove button click animation on mobile
 	 * 	* {
