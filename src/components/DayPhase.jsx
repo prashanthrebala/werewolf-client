@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Grid, Typography, Button } from "@mui/material";
 import { useSocket } from "../contexts/SocketProvider";
 import { GAME_STATE } from "../utils/constants";
+import { PLAYER_STATUS } from "../utils/emojis";
 
 export const DayPhase = ({ id, roomDetails, setRoomDetails, setGameState }) => {
 	console.log("Details", JSON.stringify(roomDetails, null, 2));
@@ -76,15 +77,16 @@ export const DayPhase = ({ id, roomDetails, setRoomDetails, setGameState }) => {
 			</Typography>
 			{Object.keys(playerList).map((playerId, idx) => {
 				const thresh = Math.round((lynchCount[playerId] / totalVotes) * 100);
+				const disabled =
+					!me.isAlive || !playerList[playerId].playerObject.isAlive;
 				return (
 					<button
-						disabled={!me.isAlive}
-						className="h-10 w-full m-2 flex justify-center items-center border-2 rounded-md relative text-white"
-						// ${
-						// 	playerId === selectedItem
-						// 		? "border-green-500 text-green-500"
-						// 		: "border-zinc-50 text-white"
-						// }
+						disabled={disabled}
+						className={`h-10 w-full m-2 flex justify-center items-center border-2 rounded-md relative ${
+							!disabled
+								? "border-zinc-50 text-white"
+								: "border-stone-700 text-stone-600"
+						}`}
 						onClick={() => {
 							if (!locked) {
 								setSelectedItem(playerId);
@@ -106,7 +108,9 @@ export const DayPhase = ({ id, roomDetails, setRoomDetails, setGameState }) => {
 								{playerList[playerId].playerObject["playerName"]}
 							</Grid>
 							<Grid item xs={2}>
-								{lynchCount[playerId] || ""}
+								{playerList[playerId].playerObject.isAlive
+									? lynchCount[playerId] || ""
+									: PLAYER_STATUS.DEAD}
 							</Grid>
 						</Grid>
 					</button>
@@ -124,7 +128,7 @@ export const DayPhase = ({ id, roomDetails, setRoomDetails, setGameState }) => {
 					{locked ? "Waiting on other players" : "Confirm Choice"}
 				</Button>
 			) : (
-				<div className="text-zinc-500 m-4">You are dead.</div>
+				<div className="text-zinc-500 m-4">You are dead</div>
 			)}
 		</Grid>
 	);

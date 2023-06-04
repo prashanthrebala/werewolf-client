@@ -9,11 +9,12 @@ export const NightPhaseButton = ({
 	selectedItem,
 	setSelectedItem,
 }) => {
+	const isDisabled = !imAlive || !playerList[playerId].playerObject.isAlive;
 	return (
 		<button
-			disabled={!playerList[playerId].playerObject.isAlive}
+			disabled={isDisabled}
 			className={`h-10 w-full m-2 flex justify-center items-center border-2 rounded-md ${
-				playerList[playerId].playerObject.isAlive
+				!isDisabled
 					? playerId === selectedItem
 						? "border-green-500 text-green-500"
 						: "border-zinc-50 text-white"

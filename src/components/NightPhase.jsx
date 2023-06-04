@@ -73,18 +73,22 @@ export const NightPhase = ({
 						key={idx}
 					/>
 				))}
-			<Button
-				onClick={() => {
-					socket.emit(
-						"playerAction",
-						myDetails["action"],
-						me.playerId,
-						selectedItem
-					);
-				}}
-			>
-				Confirm Choice
-			</Button>
+			{me.isAlive ? (
+				<Button
+					onClick={() => {
+						socket.emit(
+							"playerAction",
+							myDetails["action"],
+							me.playerId,
+							selectedItem
+						);
+					}}
+				>
+					Confirm Choice
+				</Button>
+			) : (
+				<div className="text-zinc-500 m-4">You are dead</div>
+			)}
 		</Grid>
 	);
 };
