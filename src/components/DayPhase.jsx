@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, Typography, Button } from "@mui/material";
+import { Box, Grid, Typography, Button } from "@mui/material";
 import { useSocket } from "../contexts/SocketProvider";
 import { GAME_STATE } from "../utils/constants";
 
@@ -7,6 +7,7 @@ export const DayPhase = ({ id, roomDetails, setRoomDetails, setGameState }) => {
 	console.log("Details", JSON.stringify(roomDetails, null, 2));
 	const roomCode = roomDetails["roomCode"];
 	const playerList = roomDetails["playerList"];
+	const [totalVotes, setTotalVotes] = React.useState(1);
 	const [lynchCount, setLynchCount] = React.useState(() => {
 		const ret = {};
 		Object.keys(playerList).forEach((playerId) => {
@@ -25,6 +26,7 @@ export const DayPhase = ({ id, roomDetails, setRoomDetails, setGameState }) => {
 			for (const playerId of Object.values(votes)) {
 				newLynchCount[playerId] = (newLynchCount[playerId] || 0) + 1;
 			}
+			setTotalVotes(Object.keys(votes).length || 1);
 			setLynchCount((prevValue) => {
 				const updatedValue = {};
 				for (const key of Object.keys(prevValue)) {
@@ -66,18 +68,16 @@ export const DayPhase = ({ id, roomDetails, setRoomDetails, setGameState }) => {
 				}
 			</Typography>
 			{Object.keys(playerList).map((playerId, idx) => {
+				const thresh = Math.round((lynchCount[playerId] / totalVotes) * 100);
 				return (
 					<button
 						disabled={!me.isAlive}
-						className={`h-10 w-full m-2 \
-						flex justify-center \
-						items-center border-2 \
-						rounded-md \
-						${
-							playerId === selectedItem
-								? "border-green-500 text-green-500"
-								: "border-zinc-50 text-white"
-						}`}
+						className="h-10 w-full m-2 flex justify-center items-center border-2 rounded-md relative text-white"
+						// ${
+						// 	playerId === selectedItem
+						// 		? "border-green-500 text-green-500"
+						// 		: "border-zinc-50 text-white"
+						// }
 						onClick={() => {
 							if (!locked) {
 								setSelectedItem(playerId);
@@ -86,7 +86,15 @@ export const DayPhase = ({ id, roomDetails, setRoomDetails, setGameState }) => {
 						}}
 						key={idx}
 					>
-						<Grid container justifyContent={"flex-end"}>
+						<Grid className="z-0 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full">
+							<Box
+								className={`h-9 rounded transition-width duration-200 ${
+									playerId === selectedItem ? "bg-indigo-700" : "bg-blue-950"
+								}`}
+								sx={{ width: `${thresh}%` }}
+							/>
+						</Grid>
+						<Grid container justifyContent={"flex-end"} sx={{ zIndex: 2 }}>
 							<Grid item xs={8} className="overflow-hidden">
 								{playerList[playerId].playerObject["playerName"]}
 							</Grid>
