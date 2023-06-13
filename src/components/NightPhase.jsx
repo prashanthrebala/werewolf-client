@@ -14,7 +14,7 @@ export const NightPhase = ({
 	console.log("Details", JSON.stringify(roomDetails, null, 2));
 	const roomCode = roomDetails["roomCode"];
 	const playerList = roomDetails["playerList"];
-	const me = playerList[id].playerObject;
+	const me = playerList[id];
 	const myDetails = characters[me["role"]];
 	const [selectedItem, setSelectedItem] = React.useState(-1);
 	const { socket } = useSocket();

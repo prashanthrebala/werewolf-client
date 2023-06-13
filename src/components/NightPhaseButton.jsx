@@ -9,7 +9,7 @@ export const NightPhaseButton = ({
 	selectedItem,
 	setSelectedItem,
 }) => {
-	const isDisabled = !imAlive || !playerList[playerId].playerObject.isAlive;
+	const isDisabled = !imAlive || !playerList[playerId].isAlive;
 	return (
 		<button
 			disabled={isDisabled}
@@ -26,10 +26,10 @@ export const NightPhaseButton = ({
 		>
 			<Grid container justifyContent={"flex-end"}>
 				<Grid item xs={8} className="overflow-hidden">
-					{playerList[playerId].playerObject["playerName"]}
+					{playerList[playerId]["playerName"]}
 				</Grid>
 				<Grid item xs={2}>
-					{playerList[playerId].playerObject.isAlive
+					{playerList[playerId].isAlive
 						? PLAYER_STATUS.ALIVE
 						: PLAYER_STATUS.DEAD}
 				</Grid>

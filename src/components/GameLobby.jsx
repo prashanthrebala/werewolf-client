@@ -66,7 +66,7 @@ export const GameLobby = ({
 					>
 						<Grid container justifyContent={"flex-end"}>
 							<Grid item xs={8} className="overflow-hidden text-center">
-								{roomDetails["playerList"][playerInfo].playerObject.playerName}
+								{roomDetails["playerList"][playerInfo].playerName}
 							</Grid>
 							<Grid item xs={2}>
 								{/* {idx} */}

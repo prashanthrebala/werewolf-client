@@ -16,7 +16,7 @@ export const DayPhase = ({ id, roomDetails, setRoomDetails, setGameState }) => {
 		});
 		return ret;
 	});
-	const me = playerList[id].playerObject;
+	const me = playerList[id];
 	const [selectedItem, setSelectedItem] = React.useState(-1);
 	const [locked, setLocked] = React.useState(false);
 	const { socket } = useSocket();
@@ -77,8 +77,7 @@ export const DayPhase = ({ id, roomDetails, setRoomDetails, setGameState }) => {
 			</Typography>
 			{Object.keys(playerList).map((playerId, idx) => {
 				const thresh = Math.round((lynchCount[playerId] / totalVotes) * 100);
-				const disabled =
-					!me.isAlive || !playerList[playerId].playerObject.isAlive;
+				const disabled = !me.isAlive || !playerList[playerId].isAlive;
 				return (
 					<button
 						disabled={disabled}
@@ -105,10 +104,10 @@ export const DayPhase = ({ id, roomDetails, setRoomDetails, setGameState }) => {
 						</Grid>
 						<Grid container justifyContent={"flex-end"} sx={{ zIndex: 2 }}>
 							<Grid item xs={8} className="overflow-hidden">
-								{playerList[playerId].playerObject["playerName"]}
+								{playerList[playerId]["playerName"]}
 							</Grid>
 							<Grid item xs={2}>
-								{playerList[playerId].playerObject.isAlive
+								{playerList[playerId].isAlive
 									? lynchCount[playerId] || ""
 									: PLAYER_STATUS.DEAD}
 							</Grid>
