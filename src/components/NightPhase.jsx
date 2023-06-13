@@ -4,6 +4,7 @@ import { characters } from "../utils/roles";
 import { useSocket } from "../contexts/SocketProvider";
 import { GAME_STATE } from "../utils/constants";
 import { NightPhaseButton } from "./NightPhaseButton";
+import { NotificationModal } from "./NotificationModal";
 
 export const NightPhase = ({
 	id,
@@ -17,6 +18,8 @@ export const NightPhase = ({
 	const me = playerList[id];
 	const myDetails = characters[me["role"]];
 	const [selectedItem, setSelectedItem] = React.useState(-1);
+	const [shouldDisplay, setShouldDisplay] = React.useState(false);
+	const [content, setContent] = React.useState(null);
 	const { socket } = useSocket();
 
 	React.useEffect(() => {
@@ -28,11 +31,19 @@ export const NightPhase = ({
 			setRoomDetails(roomData);
 		};
 
+		const handleNightNotice = (content) => {
+			setShouldDisplay(true);
+			setContent(content);
+		};
+
 		socket.on("dayPhase", handleDayPhaseStart);
 		console.log("Socket on mount Night Phase", socket);
 
+		socket.on("notice", handleNightNotice);
+
 		return () => {
 			socket.off("dayPhase", handleDayPhaseStart);
+			socket.off("notice", handleNightNotice);
 			console.log("Socket Exits Night Phase", socket);
 		};
 	}, [socket, setGameState, setRoomDetails]);
@@ -49,6 +60,11 @@ export const NightPhase = ({
 			p={4}
 			direction={"column"}
 		>
+			<NotificationModal
+				shouldDisplay={shouldDisplay}
+				setShouldDisplay={setShouldDisplay}
+				content={content}
+			/>
 			<Typography className="text-zinc-200" variant="h6">
 				{roomCode}
 			</Typography>
