@@ -18,7 +18,7 @@ function App() {
 	const [roomCode, setRoomCode] = useState(null);
 	const [gameState, setGameState] = useState(GAME_STATE.LOBBY);
 	// TODO replace the useState to use appropriate initial object
-	const [roomDetails, setRoomDetails] = useState({ playerList: [] });
+	const [roomDetails, setRoomDetails] = useState({ players: [] });
 
 	useEffect(() => {
 		fetch(`http://192.168.1.129:5000/whereami?id=${id}`)

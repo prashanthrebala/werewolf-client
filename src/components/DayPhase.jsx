@@ -6,8 +6,8 @@ import { PLAYER_STATUS } from "../utils/emojis";
 
 export const DayPhase = ({ id, roomDetails, setRoomDetails, setGameState }) => {
 	console.log("Details", JSON.stringify(roomDetails, null, 2));
-	const roomCode = roomDetails["roomCode"];
-	const playerList = roomDetails["playerList"];
+	const roomCode = roomDetails["code"];
+	const playerList = roomDetails["players"];
 	const [totalVotes, setTotalVotes] = React.useState(1);
 	const [lynchCount, setLynchCount] = React.useState(() => {
 		const ret = {};

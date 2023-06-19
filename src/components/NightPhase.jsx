@@ -13,8 +13,8 @@ export const NightPhase = ({
 	setRoomDetails,
 }) => {
 	console.log("Details", JSON.stringify(roomDetails, null, 2));
-	const roomCode = roomDetails["roomCode"];
-	const playerList = roomDetails["playerList"];
+	const roomCode = roomDetails["code"];
+	const playerList = roomDetails["players"];
 	const me = playerList[id];
 	const myDetails = characters[me["role"]];
 	const [isConfirmed, setIsConfirmed] = React.useState(false);

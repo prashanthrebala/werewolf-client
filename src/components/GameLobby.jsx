@@ -12,7 +12,7 @@ export const GameLobby = ({
 	setRoomDetails,
 }) => {
 	// const [roomInfo, setRoomInfo] = React.useState({ playerList: [] });
-	const playerIds = Object.keys(roomDetails.playerList);
+	const playerIds = Object.keys(roomDetails.players);
 	const { socket } = useSocket();
 	// console.log("ROOMDATA", roomInfo);
 
@@ -56,7 +56,7 @@ export const GameLobby = ({
 				{roomCode}
 			</Typography>
 			<Typography variant="body1" className="text-white">
-				{`Player Count: ${Object.keys(roomDetails["playerList"]).length}`}
+				{`Player Count: ${Object.keys(roomDetails["players"]).length}`}
 			</Typography>
 			{playerIds.map((playerInfo, idx) => {
 				return (
@@ -66,7 +66,7 @@ export const GameLobby = ({
 					>
 						<Grid container justifyContent={"flex-end"}>
 							<Grid item xs={8} className="overflow-hidden text-center">
-								{roomDetails["playerList"][playerInfo].playerName}
+								{roomDetails["players"][playerInfo].playerName}
 							</Grid>
 							<Grid item xs={2}>
 								{/* {idx} */}
