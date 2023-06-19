@@ -3,6 +3,7 @@ import { Login } from "./Login";
 import { GameLobby } from "./GameLobby";
 import React, { useState, useEffect } from "react";
 import { v4 as uuid } from "uuid";
+import { AppHeader } from "./AppHeader";
 import { DayPhase } from "./DayPhase";
 import { NightPhase } from "./NightPhase";
 import { GAME_STATE } from "../utils/constants";
@@ -33,31 +34,34 @@ function App() {
 
 	return roomCode ? (
 		<SocketProvider id={id} playerName={playerName} roomCode={roomCode}>
-			{gameState === GAME_STATE.LOBBY && (
-				<GameLobby
-					id={id}
-					roomCode={roomCode}
-					roomDetails={roomDetails}
-					setGameState={setGameState}
-					setRoomDetails={setRoomDetails}
-				/>
-			)}
-			{gameState === GAME_STATE.DAY && (
-				<DayPhase
-					id={id}
-					roomDetails={roomDetails}
-					setGameState={setGameState}
-					setRoomDetails={setRoomDetails}
-				/>
-			)}
-			{gameState === GAME_STATE.NIGHT && (
-				<NightPhase
-					id={id}
-					roomDetails={roomDetails}
-					setGameState={setGameState}
-					setRoomDetails={setRoomDetails}
-				/>
-			)}
+			<div className="min-h-screen flex flex-col">
+				<AppHeader roomCode={roomCode} playerName={playerName} />
+				{gameState === GAME_STATE.LOBBY && (
+					<GameLobby
+						id={id}
+						roomCode={roomCode}
+						roomDetails={roomDetails}
+						setGameState={setGameState}
+						setRoomDetails={setRoomDetails}
+					/>
+				)}
+				{gameState === GAME_STATE.DAY && (
+					<DayPhase
+						id={id}
+						roomDetails={roomDetails}
+						setGameState={setGameState}
+						setRoomDetails={setRoomDetails}
+					/>
+				)}
+				{gameState === GAME_STATE.NIGHT && (
+					<NightPhase
+						id={id}
+						roomDetails={roomDetails}
+						setGameState={setGameState}
+						setRoomDetails={setRoomDetails}
+					/>
+				)}
+			</div>
 		</SocketProvider>
 	) : (
 		<Login id={id} setPlayerName={setPlayerName} setRoomCode={setRoomCode} />
