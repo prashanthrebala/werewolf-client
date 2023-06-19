@@ -48,13 +48,10 @@ export const GameLobby = ({
 	return (
 		<Grid
 			container
-			className="min-h-screen w-screen bg-slate-950 flex justify-center items-center"
+			className="grow w-screen bg-slate-950 flex justify-center items-center"
 			p={4}
 			direction={"column"}
 		>
-			<Typography variant="h5" className="text-white">
-				{roomCode}
-			</Typography>
 			<Typography variant="body1" className="text-white">
 				{`Player Count: ${Object.keys(roomDetails["players"]).length}`}
 			</Typography>

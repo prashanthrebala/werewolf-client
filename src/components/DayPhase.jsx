@@ -63,13 +63,10 @@ export const DayPhase = ({ id, roomDetails, setRoomDetails, setGameState }) => {
 	return (
 		<Grid
 			container
-			className="min-h-screen w-screen bg-slate-950 flex justify-center items-center"
+			className="grow w-screen bg-slate-950 flex justify-center items-center"
 			p={4}
 			direction={"column"}
 		>
-			<Typography className="text-zinc-200" variant="h6">
-				{roomCode}
-			</Typography>
 			<Typography className="text-zinc-200" variant="body1">
 				{roomDetails["message"]}
 			</Typography>

@@ -57,7 +57,7 @@ export const NightPhase = ({
 	return (
 		<Grid
 			container
-			className="min-h-screen w-screen bg-slate-950 flex justify-center items-center"
+			className="grow w-screen bg-slate-950 flex justify-center items-center"
 			p={4}
 			direction={"column"}
 		>
@@ -66,9 +66,6 @@ export const NightPhase = ({
 				setShouldDisplay={setShouldDisplay}
 				content={content}
 			/>
-			<Typography className="text-zinc-200" variant="h6">
-				{roomCode}
-			</Typography>
 			<Typography className="text-zinc-200" variant="h5">
 				{`You are a ${myDetails["role"]}`}
 			</Typography>
