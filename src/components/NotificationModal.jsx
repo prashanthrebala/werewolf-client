@@ -1,4 +1,5 @@
 import { Box, Modal, Typography } from "@mui/material";
+import { useSocket } from "../contexts/SocketProvider";
 
 const style = {
 	position: "absolute",
@@ -23,11 +24,15 @@ export const NotificationModal = ({
 	setShouldDisplay,
 	content,
 }) => {
+	const { socket } = useSocket();
 	return (
 		<Modal
 			sx={{ backgroundColor: `rgba(0, 0, 0, 0.9)` }}
 			open={shouldDisplay}
-			onClose={() => setShouldDisplay(false)}
+			onClose={() => {
+				setShouldDisplay(false);
+				socket.emit("playerConfirm");
+			}}
 		>
 			<Box sx={style}>
 				<Typography fontSize={"1.1em"}>{content}</Typography>

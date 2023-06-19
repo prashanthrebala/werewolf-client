@@ -70,6 +70,9 @@ export const DayPhase = ({ id, roomDetails, setRoomDetails, setGameState }) => {
 			<Typography className="text-zinc-200" variant="h6">
 				{roomCode}
 			</Typography>
+			<Typography className="text-zinc-200" variant="body1">
+				{roomDetails["message"]}
+			</Typography>
 			<Typography className="text-blue-200" variant="body2">
 				{
 					"You have 2 minutes to discuss and lynch someone. Remember, an individual must have more than 50% of the votes to be lynched!"

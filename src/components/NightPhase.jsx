@@ -17,6 +17,7 @@ export const NightPhase = ({
 	const playerList = roomDetails["playerList"];
 	const me = playerList[id];
 	const myDetails = characters[me["role"]];
+	const [isConfirmed, setIsConfirmed] = React.useState(false);
 	const [selectedItem, setSelectedItem] = React.useState(-1);
 	const [shouldDisplay, setShouldDisplay] = React.useState(false);
 	const [content, setContent] = React.useState(null);
@@ -25,8 +26,8 @@ export const NightPhase = ({
 	React.useEffect(() => {
 		if (socket == null) return;
 
-		const handleDayPhaseStart = (value, roomData) => {
-			alert(value.message);
+		const handleDayPhaseStart = (roomData) => {
+			// alert(value.message);
 			setGameState(GAME_STATE.DAY);
 			setRoomDetails(roomData);
 		};
@@ -91,6 +92,7 @@ export const NightPhase = ({
 				))}
 			{me.isAlive ? (
 				<Button
+					disabled={isConfirmed}
 					onClick={() => {
 						socket.emit(
 							"playerAction",
@@ -98,6 +100,7 @@ export const NightPhase = ({
 							me.playerId,
 							selectedItem
 						);
+						setIsConfirmed(true);
 					}}
 				>
 					Confirm Choice
