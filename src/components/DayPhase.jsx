@@ -63,7 +63,7 @@ export const DayPhase = ({ id, roomDetails, setRoomDetails, setGameState }) => {
 	return (
 		<Grid
 			container
-			className="grow w-screen bg-slate-950 flex justify-center items-center"
+			className="grow w-screen bg-slate-700 flex justify-center items-center"
 			p={4}
 			direction={"column"}
 		>
